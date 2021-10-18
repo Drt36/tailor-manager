@@ -12,3 +12,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL55Dialect
+
+server:
+  port: 8082
