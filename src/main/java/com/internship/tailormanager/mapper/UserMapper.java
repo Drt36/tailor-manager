@@ -1,21 +1,30 @@
 package com.internship.tailormanager.mapper;
 
-import com.internship.tailormanager.dto.UserDto;
+import com.internship.tailormanager.dto.*;
 import com.internship.tailormanager.model.User;
 import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface UserMapper {
+public interface UserMapper{
     UserMapper USER_MAPPER = Mappers.getMapper(UserMapper.class);
 
-    UserDto modelToDto(User user);
+    UserPostDto modelToPostDto(User user);
 
-    List<UserDto> modelsToDtos(List<User> users);
+    UserGetDto modelToGetDto(User user);
+
+    UserUpdateDto modelToUserUpdateDto(User user);
+
+    List<UserGetDto> modelsToGetDtos(List<User> users);
+
+    UserResetPasswordDto modelToUserResetPasswordDto(User user);
+
+    UserChangePasswordDto modelTOUserChangePasswordDto(User user);
 
     @InheritInverseConfiguration
-    User dtoToModel(UserDto userDto);
+    User dtoToModel(UserPostDto userPostDto);
 }

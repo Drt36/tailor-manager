@@ -1,5 +1,6 @@
 package com.internship.tailormanager.service.impl;
 
+import com.internship.tailormanager.enums.Status;
 import com.internship.tailormanager.model.User;
 import com.internship.tailormanager.repository.UserRepository;
 import com.internship.tailormanager.service.UserService;
@@ -16,7 +17,7 @@ public class UserServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userRepository.getUserByEmail(email);
+        User user = userRepository.getUserByEmailAndStatus(email,Status.ACTIVE);
         if (user == null) {
             throw new UsernameNotFoundException("Could not found user");
         }
