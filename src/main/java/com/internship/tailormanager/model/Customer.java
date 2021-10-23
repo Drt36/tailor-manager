@@ -1,55 +1,56 @@
 package com.internship.tailormanager.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.internship.tailormanager.enums.Gender;
+import com.internship.tailormanager.enums.Status;
+import com.internship.tailormanager.listener.EntityListener;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Table(name = "customer", schema = "tms")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(EntityListener.class)
 public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int customerId;
+    private Long customerId;
 
     @Column(nullable = false, length = 50)
-    @NotEmpty(message = "First Name Should not be empty!")
-    @Size(max = 50, message = "Maximum length should be 50.")
     private String firstName;
 
     @Column(nullable = false, length = 50)
-    @NotEmpty(message = "Last Name should not be empty!")
-    @Size(max = 50, message = "Maximum length should be 50.")
     private String lastName;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 6)
     private Gender gender;
 
-    @NotNull(message = "Age should not be empty!")
+    @Column(nullable = false)
     private int age;
 
-    @NotNull(message = "Contact should not be empty!")
     @Column(nullable = false, length =10)
-    @Size(min = 10,message = "Contact should be 10 digits.")
     private int contact;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 7)
+    private Status status;
+
     @Email
-    @NotNull(message = "Email should not be empty!")
     @Column(unique = true, nullable = false, length = 50)
-    @Size(max = 50, message = "Maximum length should be 50.")
     private String email;
 
     @Column(nullable = false, length =100)
-    @NotEmpty(message = "Address should not be empty!")
     private String address;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference(value = "backrefrence-customer")
+    private List<Order> orderList;
 }

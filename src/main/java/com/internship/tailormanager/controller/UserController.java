@@ -1,15 +1,13 @@
 package com.internship.tailormanager.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.internship.tailormanager.dto.*;
-import com.internship.tailormanager.model.User;
 import com.internship.tailormanager.service.OtpCodeService;
 import com.internship.tailormanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,9 +16,9 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
-import java.util.List;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
     @Autowired
     private UserService userService;
@@ -28,14 +26,8 @@ public class UserController {
     @Autowired
     private OtpCodeService otpCodeService;
 
-//    @PostMapping("/api/admin/register")
-//    public ResponseEntity<UserGetDto> saveUser(@Valid @RequestBody UserPostDto userPostDto,@NotNull @RequestParam("file") MultipartFile file) throws IOException {
-//        UserGetDto userGetDto = userService.saveUser(userPostDto,file);
-//        return new ResponseEntity<UserGetDto>(userGetDto, HttpStatus.CREATED);
-//    }
-
-    @PostMapping("/api/admin/register")
-    public ResponseEntity<UserGetDto> saveUser(String user, @NotNull @RequestParam("file") MultipartFile file) throws IOException {
+    @PostMapping(value = "/api/admin/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<UserGetDto> saveUser(@RequestParam("user") String user, @RequestParam("file") MultipartFile file) throws IOException {
         UserPostDto userPostDto = new ObjectMapper().readValue(user, UserPostDto.class);
         UserGetDto userGetDto = userService.saveUser(userPostDto, file);
         return new ResponseEntity<UserGetDto>(userGetDto, HttpStatus.OK);
@@ -47,9 +39,9 @@ public class UserController {
     }
 
     @GetMapping("/api/admin/users")
-    public Page<User> getAllUsers(@RequestParam("page") int page) {
-        Page<User> user = userService.getAllActiveUsers(page);
-        return user;
+    public Page<UserGetDto> getAllUsers(@RequestParam("page") int page) {
+        Page<UserGetDto> users = userService.getAllActiveUsers(page);
+        return users;
     }
 
     @Transactional
@@ -100,7 +92,7 @@ public class UserController {
     @Transactional
     @PostMapping("/api/changepassword")
     public String changePassword(@Valid @RequestBody UserChangePasswordDto userChangePasswordDto) {
-       return userService.changeUserPassword(userChangePasswordDto);
+        return userService.changeUserPassword(userChangePasswordDto);
     }
 
 }

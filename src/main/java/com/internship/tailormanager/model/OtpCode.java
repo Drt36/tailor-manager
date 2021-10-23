@@ -1,6 +1,7 @@
 package com.internship.tailormanager.model;
 
 import com.internship.tailormanager.enums.CodeStatus;
+import com.internship.tailormanager.listener.EntityListener;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Table(name = "otpcode", schema = "tms")
 @NoArgsConstructor
 @AllArgsConstructor
+@EntityListeners(EntityListener.class)
 public class OtpCode {
 
     @Id

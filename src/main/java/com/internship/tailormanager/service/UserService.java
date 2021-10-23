@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Converter;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +34,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Data
 @Service
@@ -105,7 +105,7 @@ public class UserService implements UserDetails {
 
         UUID uuid = UUID.randomUUID();
         File saveFile = new ClassPathResource("static/userimage").getFile();
-        Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + uuid + file.getOriginalFilename());
+        Path path = Paths.get(saveFile.getAbsolutePath() + File.separator+ uuid + file.getOriginalFilename());
         Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
         User newUser = userMapper.dtoToModel(userPostDto);
@@ -113,29 +113,31 @@ public class UserService implements UserDetails {
         newUser.setPassword(bCryptPasswordEncoder.encode(generatedPassword));
         newUser.setStatus(Status.ACTIVE);
         newUser.setImagePath(uuid + file.getOriginalFilename());
+
         User user = userRepository.save(newUser);
 
-        emailService.sendEmail(user.getEmail(), "Your Account has been created. your email or username: " + user.getEmail() +
-                "  Password : " + generatedPassword + "  please change this password and Do not share with others.", "Account Created.");
+        //emailService.sendEmail(user.getEmail(), "Your Account has been created. your email or username: " + user.getEmail() +
+        //       "  Password : " + generatedPassword + "  please change this password and Do not share with others.", "Account Created.");
 
         UserGetDto userGetDto = userMapper.modelToGetDto(user);
         userGetDto.setImagePath(ServletUriComponentsBuilder.fromCurrentContextPath().path("/userimage/").path(userGetDto.getImagePath()).toUriString());
         return userGetDto;
     }
 
-    public  UserGetDto getUser(String email){
-        User user=userRepository.getUserByEmailAndStatus(email,Status.ACTIVE);
+    public UserGetDto getUser(String email) {
+        User user = userRepository.getUserByEmailAndStatus(email, Status.ACTIVE);
         user.setImagePath(ServletUriComponentsBuilder.fromCurrentContextPath().path("/userimage/").path(user.getImagePath()).toUriString());
         return userMapper.modelToGetDto(user);
     }
 
-    public Page<User> getAllActiveUsers(int page) {
-        Pageable pageable=PageRequest.of(page,2);
-        Page<User> users=userRepository.findUserByStatus(Status.ACTIVE,pageable);
-        for(User user:users){
+    public Page<UserGetDto> getAllActiveUsers(int page) {
+        Pageable pageable = PageRequest.of(page, 2);
+        Page<User> users = userRepository.findUserByStatus(Status.ACTIVE, pageable);
+        for (User user : users) {
             user.setImagePath(ServletUriComponentsBuilder.fromCurrentContextPath().path("/userimage/").path(user.getImagePath()).toUriString());
         }
-        return users;
+        Page<UserGetDto> userGetDtos = users.map(user -> userMapper.modelToGetDto(user));
+        return userGetDtos;
     }
 
     public UserGetDto updateUser(Long id, UserUpdateDto userUpdateDto, MultipartFile file) throws IOException {
@@ -145,7 +147,6 @@ public class UserService implements UserDetails {
             File saveFile = new ClassPathResource("static/userimage").getFile();
             Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + user.getImagePath());
             Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-            user.setImagePath(user.getImagePath());
         }
 
         user.setFirstName(userUpdateDto.getFirstName());
@@ -172,7 +173,7 @@ public class UserService implements UserDetails {
                 new UsernamePasswordAuthenticationToken(userLoginDto.getEmail(), userLoginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
-        User user = userRepository.getUserByEmailAndStatus(userPrincipal.getUsername(),Status.ACTIVE);
+        User user = userRepository.getUserByEmailAndStatus(userPrincipal.getUsername(), Status.ACTIVE);
         return userMapper.modelToGetDto(user);
     }
 
@@ -182,7 +183,7 @@ public class UserService implements UserDetails {
     }
 
     public boolean isEmailExist(String email) {
-        return userRepository.existsUserByEmailAndStatus(email,Status.ACTIVE);
+        return userRepository.existsUserByEmailAndStatus(email, Status.ACTIVE);
     }
 
     public void resetUserPassword(String email) {
@@ -192,18 +193,17 @@ public class UserService implements UserDetails {
     }
 
     public String changeUserPassword(UserChangePasswordDto userChangePasswordDto) {
-        User user=userRepository.getUserByEmail(userChangePasswordDto.getEmail());
-        String response=null;
+        User user = userRepository.getUserByEmail(userChangePasswordDto.getEmail());
+        String response = null;
         System.out.println(userChangePasswordDto.getOldPassword());
         System.out.println(user.getPassword());
-        if(bCryptPasswordEncoder.matches(userChangePasswordDto.getOldPassword(),user.getPassword())){
+        if (bCryptPasswordEncoder.matches(userChangePasswordDto.getOldPassword(), user.getPassword())) {
             userRepository.updateUserByEmail(userChangePasswordDto.getEmail(), bCryptPasswordEncoder.encode(userChangePasswordDto.getPassword()));
-            response="Password Changed Successfully.";
+            response = "Password Changed Successfully.";
+        } else {
+            response = "Old Password did not matched.";
         }
-        else{
-            response="Old Password did not matched.";
-        }
-       return response;
+        return response;
     }
 
 }

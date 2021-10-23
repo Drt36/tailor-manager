@@ -2,7 +2,6 @@ package com.internship.tailormanager.dto;
 
 import com.internship.tailormanager.enums.Gender;
 import com.internship.tailormanager.enums.Role;
-import com.internship.tailormanager.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,9 +16,6 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserPostDto {
-
-    private Long userId;
-
     @NotEmpty(message = "First Name Should not be empty!")
     @Size(max = 50, message = "Maximum length should be 50 digits.")
     private String firstName;

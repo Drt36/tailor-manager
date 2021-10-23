@@ -3,23 +3,19 @@ package com.internship.tailormanager.model;
 import com.internship.tailormanager.enums.Gender;
 import com.internship.tailormanager.enums.Role;
 import com.internship.tailormanager.enums.Status;
-import com.internship.tailormanager.listener.UserListener;
+import com.internship.tailormanager.listener.EntityListener;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "user", schema = "tms")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(UserListener.class)
+@EntityListeners(EntityListener.class)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

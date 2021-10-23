@@ -1,6 +1,5 @@
 package com.internship.tailormanager.repository;
 
-import com.internship.tailormanager.dto.UserGetDto;
 import com.internship.tailormanager.enums.Status;
 import com.internship.tailormanager.model.User;
 import org.springframework.data.domain.Page;

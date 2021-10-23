@@ -1,6 +1,6 @@
 package com.internship.tailormanager.model;
 
-import com.internship.tailormanager.enums.Status;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.internship.tailormanager.listener.EntityListener;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,28 +10,25 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "expense", schema = "tms")
+@Table(name = "staffsalary", schema = "tms")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(EntityListener.class)
-public class Expense {
+public class StaffSalary {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long expenseId;
-
-    @Column(nullable = false,length = 50)
-    private String title;
-
-    @Column(nullable = false)
-    private Float amount;
-
-    private String description;
+    private Long salaryId;
 
     @Column(nullable = false)
     private LocalDateTime date;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 7)
-    private Status status;
+    @Column(nullable = false)
+    private Float amount;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "staff_id")
+    @JsonBackReference(value = "backrefrence-staffsalary")
+    private Staff staff;
 }
