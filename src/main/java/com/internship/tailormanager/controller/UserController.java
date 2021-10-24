@@ -45,7 +45,7 @@ public class UserController {
     }
 
     @Transactional
-    @PutMapping("/api/admin/users/{id}")
+    @PutMapping("/api/both/updateprofile/{id}")
     public ResponseEntity<UserGetDto> updateUser(@NotNull @PathVariable("id") Long id, String user, @NotNull @RequestParam("file") MultipartFile file) throws IOException {
         UserUpdateDto userUpdateDto = new ObjectMapper().readValue(user, UserUpdateDto.class);
         UserGetDto userGetDto = userService.updateUser(id, userUpdateDto, file);
@@ -65,7 +65,7 @@ public class UserController {
         return new ResponseEntity<UserGetDto>(userGetDto, HttpStatus.OK);
     }
 
-    @PostMapping("/api/logout")
+    @PostMapping("/api/both/logout")
     public String logoutUser() {
         return userService.logoutUser();
     }
@@ -90,7 +90,7 @@ public class UserController {
     }
 
     @Transactional
-    @PostMapping("/api/changepassword")
+    @PostMapping("/api/both/changepassword")
     public String changePassword(@Valid @RequestBody UserChangePasswordDto userChangePasswordDto) {
         return userService.changeUserPassword(userChangePasswordDto);
     }

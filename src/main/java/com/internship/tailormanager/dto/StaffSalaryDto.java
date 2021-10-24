@@ -13,13 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class StaffSalaryDto {
-
     private Long salaryId;
-
     private LocalDateTime date;
-
-    @NotNull
     private Float amount;
-
     private Staff staff;
 }

@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ExpenseRepository extends JpaRepository<Expense,Long> {
+public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 
-    Expense getExpenseByExpenseIdAndStatus(Long id,Status status);
+    Expense getExpenseByExpenseIdAndStatus(Long id, Status status);
 
     Page<Expense> findExpenseByStatus(Status status, Pageable pageable);
 }

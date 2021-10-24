@@ -41,12 +41,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().authorizeRequests()
                 .antMatchers("/api/login").permitAll()
                 .antMatchers("/userimage/**").permitAll()
+                .antMatchers("/productimage/**").permitAll()
                 .antMatchers("/api/resetpassword/**").permitAll()
-                .antMatchers("/api/logout").hasAnyAuthority("USER", "ADMIN")
-                .antMatchers("/api/changepassword").hasAnyAuthority("USER", "ADMIN")
+                .antMatchers("/api/both/**").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers("/api/user/**").hasAuthority("USER")
-                .antMatchers("/api/admin/**").permitAll()
-                //.antMatchers("/api/admin/**").hasAuthority("ADMIN")
+                .antMatchers("/api/admin/**").hasAuthority("ADMIN")
                 .anyRequest().authenticated();
     }
 }

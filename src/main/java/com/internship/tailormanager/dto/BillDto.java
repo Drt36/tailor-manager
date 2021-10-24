@@ -12,17 +12,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BillDto {
-
     private Long billId;
-
     private LocalDateTime date;
-
     private float billActualAmount;
-
     private float billAdvanced;
-
     private float billDueamount;
-
     private List<Order> orderList;
-
 }

@@ -15,42 +15,22 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderDto {
-
     private Long orderId;
-
     private LocalDate date;
-
-    @NotNull
     private LocalDate deliveryDate;
-
-    @Enumerated(EnumType.STRING)
     private OrderStatus orderstatus;
-
     private Float orderAmount;
-
     private Float clothAmount;
-
     private Float discount;
-
     private Float advance;
-
     private Float totalAmount;
-
     private Float remainingAmount;
-
     private String description;
-
     private Boolean isBilled;
-
     private Status status;
-
     private Product product;
-
     private Staff staff;
-
     private Bill bill;
-
     private Customer customer;
-
     private Measurment measurment;
 }

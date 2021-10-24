@@ -13,14 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InventoryDto {
-
-    private int id;
-
-    @NotEmpty
-    @Size(max = 50)
+    private Long id;
     private String name;
-
     private Float length;
-
     private List<Product> productList;
 }
